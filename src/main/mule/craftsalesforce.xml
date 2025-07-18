@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="750fccb6-5340-4ce5-ba4d-1321bf2c57e9" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="74fc99a1-4451-4a0f-a165-17793f08275a" >
+		<salesforce:basic-connection username="jorouters789@agentforce.com" password="Gingerbread9@gingerbread" securityToken="JplVxnDB28aajIBAAcVy32Lpf" />
+	</salesforce:sfdc-config>
+	<flow name="craftsalesforceFlow" doc:id="00c68882-5556-4f32-b23f-fc10d40d692b" >
+		<http:listener doc:name="Listener" doc:id="6bdbd649-4fa8-4493-80b9-e01208b221a6" config-ref="HTTP_Listener_config" path="/select"/>
+		<salesforce:query doc:name="Query" doc:id="f8b923c3-af34-4707-a2c4-04fa9b2eb5d2" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT active__c,address__c,age__c,Name,salary__c FROM Instructor__c ]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="d3a52182-281e-4eb5-b515-a52d6571c85c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow1" doc:id="e3929a03-193f-4782-bbcf-b9dc1c1e6f59" >
+		<http:listener doc:name="Listener" doc:id="9798cdd3-4e0d-4249-8e41-91213807ba66" config-ref="HTTP_Listener_config" path="/another"/>
+		<salesforce:query-all doc:name="Query all" doc:id="4976a5c1-b621-47a5-8984-2c4d6c5aceda" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT active__c,address__c,age__c,Name,salary__c FROM Instructor__c ]]></salesforce:salesforce-query>
+		</salesforce:query-all>
+		<ee:transform doc:name="Transform Message" doc:id="e399eb35-9a0a-444c-906e-2494af095521" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
