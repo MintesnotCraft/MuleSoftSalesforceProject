@@ -9,8 +9,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="750fccb6-5340-4ce5-ba4d-1321bf2c57e9" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="74fc99a1-4451-4a0f-a165-17793f08275a" >
-		<salesforce:basic-connection username="jorouters789@agentforce.com" password="Gingerbread9@gingerbread" securityToken="JplVxnDB28aajIBAAcVy32Lpf" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="5c502bf2-88c5-4ab6-9bac-0c6eaacf8b5c" >
+		<salesforce:basic-connection username="jorouters789@agentforce.com" password="Gingerbread9@gingerbread" securityToken="5jWGxJu9JtY8yX5wlqlJytQ1G" />
 	</salesforce:sfdc-config>
 	<flow name="craftsalesforceFlow" doc:id="00c68882-5556-4f32-b23f-fc10d40d692b" >
 		<http:listener doc:name="Listener" doc:id="6bdbd649-4fa8-4493-80b9-e01208b221a6" config-ref="HTTP_Listener_config" path="/select"/>
@@ -32,6 +32,259 @@ payload]]></ee:set-payload>
 			<salesforce:salesforce-query ><![CDATA[SELECT active__c,address__c,age__c,Name,salary__c FROM Instructor__c ]]></salesforce:salesforce-query>
 		</salesforce:query-all>
 		<ee:transform doc:name="Transform Message" doc:id="e399eb35-9a0a-444c-906e-2494af095521" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow2" doc:id="8cfbc68c-7ea5-4511-8cd9-92730c88d012" >
+		<http:listener doc:name="Listener" doc:id="aca113b1-35ee-4c0e-92ca-4a036e865b0a" config-ref="HTTP_Listener_config" path="/create"/>
+		<ee:transform doc:name="Transform Message" doc:id="7a84cbbb-7674-484e-8ae7-37cd3940a154" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	LastName: "Kenenisa",
+	FirstName: "Sisay",
+	Phone: "0987654321",
+	Email: "kenenisa@gmail.com"
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Contact" doc:name="Create" doc:id="65ecc921-4b88-47b4-8902-8e1a82005b6d" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="b1ae4e50-15c3-4bfc-af21-b41ed48ac1b3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow3" doc:id="89b173b4-527f-4e20-a32e-ddccce2c4318" >
+		<http:listener doc:name="Listener" doc:id="a95f84de-3e70-4f07-a68d-546c12065b0a" config-ref="HTTP_Listener_config" path="/instructors"/>
+		<ee:transform doc:name="Transform Message" doc:id="2b2f3301-c622-4910-8daa-4fb5469c5031" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+{
+    "Name": "Sisay Mekonnen",
+    "age__c": 29,
+    "address__c": "Adama",
+    "email__c": "sisay.mekonnen@gmail.com",
+    "salary__c": 8500,
+    "active__c": true
+  },
+  {
+    "Name": "Muluwork Tadesse",
+    "age__c": 27,
+    "address__c": "Bahir Dar",
+    "email__c": "mulu.tad@gmail.com",
+    "salary__c": 7800,
+    "active__c": false
+  },
+  {
+    "Name": "Abel Wondimu",
+    "age__c": 31,
+    "address__c": "Hawassa",
+    "email__c": "abelw@gmail.com",
+    "salary__c": 9200,
+    "active__c": true
+  },
+  {
+    "Name": "Hanna Getachew",
+    "age__c": 26,
+    "address__c": "Dire Dawa",
+    "email__c": "hanna.g@gmail.com",
+    "salary__c": 8800,
+    "active__c": true
+  },
+  {
+    "Name": "Eyob Tesfahun",
+    "age__c": 33,
+    "address__c": "Mekelle",
+    "email__c": "eyob.tesfahun@gmail.com",
+    "salary__c": 9500,
+    "active__c": false
+  },
+  {
+    "Name": "Feven Alemayehu",
+    "age__c": 28,
+    "address__c": "Gondar",
+    "email__c": "feven.alemayehu@gmail.com",
+    "salary__c": 8700,
+    "active__c": true
+  },
+  {
+    "Name": "Yonas Tsegaye",
+    "age__c": 30,
+    "address__c": "Jimma",
+    "email__c": "yonas.tsegaye@gmail.com",
+    "salary__c": 8900,
+    "active__c": false
+  },
+  {
+    "Name": "Selamawit Abate",
+    "age__c": 25,
+    "address__c": "Harar",
+    "email__c": "selam.abate@gmail.com",
+    "salary__c": 8600,
+    "active__c": true
+  },
+  {
+    "Name": "Nahom Bekele",
+    "age__c": 32,
+    "address__c": "Debre Birhan",
+    "email__c": "nahom.bekele@gmail.com",
+    "salary__c": 9100,
+    "active__c": true
+  }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Instructor__c" doc:name="Create" doc:id="31bd4c67-070f-46b2-949d-a4353acf09e4" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="83257fa5-59e0-47d5-ab75-ba91ea1ca255" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow7" doc:id="2effde7e-94fe-47cd-8fac-9907afb45e59" >
+		<http:listener doc:name="Listener" doc:id="27d293bb-0939-4374-90d5-630be84bf77f" config-ref="HTTP_Listener_config" path="/upsert"/>
+		<ee:transform doc:name="Transform Message" doc:id="19b12c5a-f0d3-4bda-a4cb-d1a321f30b3f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	LastName: "Soresa",
+	FirstName: "Ephrem",
+	Email: "ephi@outlook.com"
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert doc:name="Upsert" doc:id="1fa6a1b3-f25a-43a7-8ec5-8f16abd5c642" config-ref="Salesforce_Config" objectType="Contact" externalIdFieldName="Email"/>
+		<ee:transform doc:name="Transform Message" doc:id="a0d3252d-e4df-4738-beeb-602956e3b007" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow4" doc:id="427ffd45-70f9-4972-b3ff-4c72162d59f5" >
+		<http:listener doc:name="Listener" doc:id="a2465fea-acea-40e3-82de-834de8b79f21" config-ref="HTTP_Listener_config" path="/update"/>
+		<ee:transform doc:name="Transform Message" doc:id="a90b7a3f-2e76-47d6-bf84-0bf1a586ddd4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Id: "003gK0000057z8k",
+	Phone: "0967836577",
+	Email: "alemu@gmail.com"
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update type="Contact" doc:name="Update" doc:id="5374b7e4-e726-4c13-b7da-8d77b91904d5" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="f2eb0c0b-6298-4a9b-b392-b269fc37af94" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow5" doc:id="f188140d-f23f-43f9-ab5d-545a9571c492" >
+		<http:listener doc:name="Listener" doc:id="6546a829-d586-494c-a445-6433543e3975" config-ref="HTTP_Listener_config" path="/instructorupdate"/>
+		<ee:transform doc:name="Transform Message" doc:id="baa8a1fa-4f1b-435e-b6bd-9f32e23617f3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Id: "a00gK00000BKlm7",
+	age__c: 40,
+	salary__c: 99000,
+	email__c: "mintesnot@hotmail.com"
+},
+{
+	Id: "a00gK00000BKlm8",
+	age__c: 80,
+	salary__c: 10000
+},
+{
+	Id: "a00gK00000BKlm4",
+	age__c: 89,
+	salary__c: 89000
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update type="Instructor__c" doc:name="Update" doc:id="1b2989c2-519c-40e2-aa17-ab64d614a49a" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="6e63cca3-4ff8-41d9-91b6-54b605f50375" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow6" doc:id="010e06df-d286-45fe-be07-ffb16b635091" >
+		<http:listener doc:name="Listener" doc:id="b9f8dd51-c01c-4bcb-9450-d1e01922e454" config-ref="HTTP_Listener_config" path="/delete"/>
+		<ee:transform doc:name="Transform Message" doc:id="6d8b5a49-67f7-41bc-986e-5252e78d418c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+["a00gK00000BKlm7", "a00gK00000BKlm8", "a00gK00000BKlm6", "a00gK00000BKmgT", "a00gK00000BKlmB", "a00gK00000B3fzZ"]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:delete doc:name="Delete" doc:id="0f7d3f36-c9a2-4055-a127-78122bb23210" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="22b7bdfd-8f87-47a0-9dbf-8e22abed3087" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="craftsalesforceFlow8" doc:id="30fbbc1e-7846-4deb-97ea-ee403cbb8498" >
+		<http:listener doc:name="Listener" doc:id="e80be275-4dc0-4c0e-89b6-f4e05ed50de5" config-ref="HTTP_Listener_config" path="/upsertdata"/>
+		<ee:transform doc:name="Transform Message" doc:id="31bfd8ac-251e-4074-b6ca-d90e90876aec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Name: "Hagere",
+	email__c: "kebe@gmail.com",
+	address__c: "Adama",
+	age__c: 29
+},
+{
+	Name: "iwunete",
+	email__c: "iwunete@gmail.com",
+	address__c: "Addis Ababa",
+	age__c: 25
+}
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert doc:name="Upsert" doc:id="daedc354-eb34-43b9-92f6-dce972e3277f" config-ref="Salesforce_Config" objectType="Craft__c" externalIdFieldName="email__c"/>
+		<ee:transform doc:name="Transform Message" doc:id="116719f3-b37a-4283-9d00-66e95d14c7d8" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
