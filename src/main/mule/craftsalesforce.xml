@@ -293,4 +293,64 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="craftsalesforceFlow9" doc:id="38b9b6b3-c55d-4f93-a522-82fec3b1605d" >
+		<salesforce:new-object-listener doc:name="On New Object" doc:id="7eeb5743-8356-4ff6-bee9-7e71a7763787" config-ref="Salesforce_Config" objectType="Instructor__c">
+			<scheduling-strategy >
+				<fixed-frequency frequency="2" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</salesforce:new-object-listener>
+		<ee:transform doc:name="Transform Message" doc:id="8ecaca7b-d56f-4e59-9350-51aee370a84e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ad87b7fe-e959-4495-b4b8-e29f91e55467" message="#[payload]"/>
+	</flow>
+	<flow name="craftsalesforceFlow10" doc:id="e5e8ff3e-cd9a-4022-a4b4-286fd08c50c5" >
+		<salesforce:modified-object-listener doc:name="On Modified Object" doc:id="9d5c8481-58f1-41c4-8fdc-59d225a5effa" config-ref="Salesforce_Config" objectType="Instructor__c">
+			<scheduling-strategy >
+				<fixed-frequency frequency="3" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</salesforce:modified-object-listener>
+		<ee:transform doc:name="Transform Message" doc:id="6c31dc0a-4668-4d01-9ba1-910e8798d72b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="aaa9981c-1ca6-4c9c-942b-2ad53cb494dd" message="#[payload]"/>
+	</flow>
+	<flow name="craftsalesforceFlow11" doc:id="3b4f1966-9675-4946-a0fe-a528da2f7b07" >
+		<salesforce:deleted-object-listener objectType="Instructor__c" doc:name="On Deleted Object" doc:id="c788c7d7-bc04-4143-8324-4faa2f53b9b7" config-ref="Salesforce_Config">
+			<scheduling-strategy >
+				<fixed-frequency frequency="3000" />
+			</scheduling-strategy>
+		</salesforce:deleted-object-listener>
+		<ee:transform doc:name="Transform Message" doc:id="bdd381f8-2a09-431c-8b90-684b2ef6c6b1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a0dc912d-d4b1-49fb-bcc3-39515a71d017" message="#[payload]"/>
+	</flow>
+	<flow name="craftsalesforceFlow12" doc:id="b6111444-0d4b-4ee1-a93a-1475070243b9" >
+		<http:listener doc:name="Listener" doc:id="6ce61800-c2cc-4b80-a341-a23e34cb0c4b" config-ref="HTTP_Listener_config" path="/bulk"/>
+		<salesforce:create-job-bulk-api-v2 doc:name="Create job bulk api v 2" doc:id="9bdfd267-9afa-40d4-8790-5c5f23c0d3c0" config-ref="Salesforce_Config" objectType="Contact" operation="delete" lineEnding="CRLF"/>
+		<ee:transform doc:name="Transform Message" doc:id="bca49203-5e9d-40db-8afa-3fbf2e1842de" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"Done"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>
